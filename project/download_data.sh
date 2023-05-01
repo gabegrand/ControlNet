@@ -10,3 +10,7 @@ wget https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pru
 mv v1-5-pruned.ckpt models/v1-5-pruned.ckpt
 python ../tool_add_control.py models/v1-5-pruned.ckpt models/control_sd15_ini.ckpt
 
+# Download Photo-Sketch dataset: https://mtli.github.io/sketch/
+python download_photosketch.py
+mkdir data/sketch
+unzip image-downloader.zip -d data/sketch
