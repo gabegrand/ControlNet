@@ -102,7 +102,7 @@ class PhotoSketchDataset(Dataset):
         max_width = 360
         
         pad_bot = max_height - source_height 
-        pad_right = max_width - source_height 
+        pad_right = max_width - source_width 
 
         assert pad_bot >= 0
         assert pad_right >= 0
@@ -131,6 +131,12 @@ class PhotoSketchDataset(Dataset):
 
         # Normalize target images to [-1, 1].
         target = (target.astype(np.float32) / 127.5) - 1.0
+
+        assert source.shape[0] == max_height, f"source shape: {source.shape}"
+        assert source.shape[1] == max_width, f"source shape: {source.shape}"
+        
+        assert target.shape[1] == max_width, f"target shape: {target.shape}"
+        assert target.shape[1] == max_width, f"target shape: {target.shape}"
 
         return dict(jpg=target, txt=prompt, hint=source)
 
