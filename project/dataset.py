@@ -65,8 +65,17 @@ class PhotoSketchDataset(Dataset):
         assert len(self.prompts) == len(self.sketches)
         assert len(self.images) == len(self.sketches)
 
-        for i in range(100):
-            self.__getitem__(i)
+        """
+        heights = []
+        widths = []
+        for i in range(len(self.prompts)):
+            img = cv2.imread(self.sketches[idx])
+            h, w, _ = img.shape
+            heights.append(h)
+            widths.append(w)
+        print("max height: ", max(heights))
+        print("max width: ", max(widths))
+        """
 
     def __len__(self):
         return len(self.sketches)
@@ -85,15 +94,36 @@ class PhotoSketchDataset(Dataset):
         # source is the sketch
         source = cv2.imread(self.sketches[idx])
         target = cv2.imread(self.images[idx])
+        
+        source_height, source_width, _ = source.shape 
+        target_height, target_width, _ = target.shape
+
+        max_height = 240 
+        max_width = 360
+        
+        pad_bot = max_height - source_height 
+        pad_right = max_width - source_height 
+
+        assert pad_bot >= 0
+        assert pad_right >= 0
+
+        # pad
+        source = cv2.copyMakeBorder(source, 0, pad_bot, 0, pad_right, borderType=cv2.BORDER_CONSTANT, value=0)
+        target = cv2.copyMakeBorder(target, 0, pad_bot, 0, pad_right, borderType=cv2.BORDER_CONSTANT, value=0)
+
+        """
+        # write padded image
+        source_stub = self.sketches[idx].split('/')[-1]
+        target_stub = self.sketches[idx].split('/')[-1]
+        os.makedirs(os.path.join(self.sketch_dir, 'padded'), exist_ok=True)
+        print("writing to: ", os.path.join(self.sketch_dir, 'padded', source_stub))
+        cv2.imwrite(os.path.join(self.sketch_dir, 'padded', source_stub), source)
+        cv2.imwrite(os.path.join(self.img_dir, 'padded', target_stub), target)
+        """
 
         # Do not forget that OpenCV read images in BGR order.
         source = cv2.cvtColor(source, cv2.COLOR_BGR2RGB)
         target = cv2.cvtColor(target, cv2.COLOR_BGR2RGB)
-
-        height, width, channels = source.shape 
-        print('source size: ', height, width)
-        height, width, channels = target.shape
-        print('target size: ', height, width)
 
 
         # Normalize source images to [0, 1].

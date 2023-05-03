@@ -21,11 +21,11 @@ only_mid_control = False
 print("Creating data...")
 train_dataset = PhotoSketchDataset(split='train')
 val_dataset = PhotoSketchDataset(split='val')
-train_dataloader = DataLoader(train_dataset, num_workers=0, batch_size=batch_size, shuffle=True)
-val_dataloader = DataLoader(val_dataset, num_workers=0, batch_size=batch_size, shuffle=False)
+train_dataloader = DataLoader(train_dataset, num_workers=0, batch_size=1, shuffle=True)
+val_dataloader = DataLoader(val_dataset, num_workers=0, batch_size=1, shuffle=False)
 logger = ImageLogger(batch_frequency=logger_freq)
-#trainer = pl.Trainer(gpus=1, precision=32, callbacks=[logger])
-trainer = pl.Trainer(gpus=3, accelerator="gpu", strategy="ddp", precision=32, callbacks=[logger])
+trainer = pl.Trainer(gpus=1, precision=32, callbacks=[logger], accumulate_grad_batches=batch_size, default_root_dir='experiments/sketch_0503')
+#trainer = pl.Trainer(gpus=3, accelerator="gpu", strategy="ddp", precision=32, callbacks=[logger])
 
 # First use cpu to load models. Pytorch Lightning will automatically move it to GPUs.
 print("Creating models...")
