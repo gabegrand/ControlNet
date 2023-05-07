@@ -45,6 +45,7 @@ def run_sampler(
     ddim_steps=20,
     eta=0.0,
     scale=9.0,
+    show_progress: bool = True,
 ):
     with torch.no_grad():
         if torch.cuda.is_available():
@@ -98,6 +99,7 @@ def run_sampler(
             eta=eta,
             unconditional_guidance_scale=scale,
             unconditional_conditioning=un_cond,
+            show_progress=show_progress,
         )
 
         if config.save_memory:
