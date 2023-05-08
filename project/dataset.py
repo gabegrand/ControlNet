@@ -40,12 +40,12 @@ class Fill50kDataset(Dataset):
         return dict(jpg=target, txt=prompt, hint=source)
 
 class PhotoSketchDataset(Dataset):
-    def __init__(self, split="train"):
+    def __init__(self, split="train", data_dir="./data/sketch"):
         self.sketches = []
         self.images = []
         self.prompts = []
 
-        self.data_dir = './data/sketch/'
+        self.data_dir = data_dir
         self.sketch_dir = os.path.join(self.data_dir, 'sketch-rendered/width-5')
         self.img_dir = os.path.join(self.data_dir, 'image')
         
